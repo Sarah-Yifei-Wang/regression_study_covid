@@ -7,11 +7,11 @@ We assume the dates on which the mandate was placed is critical to our study for
 In our study, we conducted various tasks prior to our linear regression models:
 
 1. First, we studied the data and tried to understand the distribution of total number of cases by each state, which we used as dependent variable for our study. Our aim in understanding the distribution is to identify outliers as well as get a general idea about the dependent variable spread.
-Then we cleaned our data and identified issues such as duplicates or missing value that can affect our study.
-We also performed exploratory data analysis (EDA) in order to form our base model and identified key variables to be used for our linear regression models.
-We identified required data transformation for effective study and required key variables created from 'Mandate face mask in public facing business' date
-Furthermore, we also took into consideration the number of days businesses were closed, as the mandate only restricts employess in public-facing businesses; number of days stay at home policy was in place; population at risk and number of days the face mask mandate is in place.
-We studied the correlation between the independent variables and with the dependent variable to assess our assumption.
-We created base model and conducted 2 improvements on it. We checked the quality of model along with multicollinearity check.
-Lastly, we assessed CLM assumptions and verified if any voilation are there. We also summarized statitical and practical significance of our study.
+2. Then we cleaned our data and identified issues such as duplicates or missing value that can affect our study.
+3. We also performed exploratory data analysis (EDA) in order to form our base model and identified key variables to be used for our linear regression models.
+4. We identified required data transformation for effective study and required key variables created from 'Mandate face mask in public facing business' date
+5. Furthermore, we also took into consideration the number of days businesses were closed, as the mandate only restricts employess in public-facing businesses; number of days stay at home policy was in place; population at risk and number of days the face mask mandate is in place.
+6. We studied the correlation between the independent variables and with the dependent variable to assess our assumption.
+7. We created base model and conducted 2 improvements on it. We checked the quality of model along with multicollinearity check.
+8. Lastly, we assessed CLM assumptions and verified if any voilation are there. We also summarized statitical and practical significance of our study.
 We did the study on ommitted variables before concluding.
