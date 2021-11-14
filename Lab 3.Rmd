@@ -1,0 +1,106 @@
+---
+title: "Untitled"
+author: "Rashmi Singh"
+date: "July 15, 2020"
+output: html_document
+---
+
+```{r}
+#install.packages("tidyverse")
+
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(data.table)
+library(DataExplorer)
+library(lubridate)
+library(gridExtra)
+library(readxl)
+#library(tidyverse)
+library(readxl)
+#df <- read_excel("Dropbox (Personal)/MIDS/W203 Stats for Data Science/Lab3/Covid-19_data.xlsx")
+df<- Covid_19_data
+```
+
+```{r}
+#convert variables and normalization
+df$death_norm <- round((df$`Total Death` - min(df$`Total Death`))/(max(df$`Total Death`)-min(df$`Total Death`)),2)
+df$case_norm <- round((df$`Total Cases` - min(df$`Total Cases`))/(max(df$`Total Cases`)-min(df$`Total Cases`)),2)
+df$pop18_norm <- round((df$`Population 2018` - min(df$`Population 2018`))/(max(df$`Population 2018`)-min(df$`Population 2018`)),2)
+#df$totalresults_norm <- round((df$totalTestResults - min(df$totalTestResults))/(max(df$totalTestResults)- min(df$totalTestResults)),2)
+```
+
+```{r}
+#Converting date columns to date
+
+#install.packages("janitor")
+library(janitor)
+df$`Stay at home/ shelter in place` <- excel_numeric_to_date(df$`Stay at home/ shelter in place`) 
+df$`End/relax stay at home/shelter in place` <- excel_numeric_to_date(df$`End/relax stay at home/shelter in place`)
+df$`Closed non-essential businesses` <- excel_numeric_to_date(df$`Closed non-essential businesses`)
+df$`Began to reopen businesses statewide` <- excel_numeric_to_date(df$`Began to reopen businesses statewide`)
+df$`Mandate face mask use by employees in public-facing businesses` <- excel_numeric_to_date(df$`Mandate face mask use by employees in public-facing businesses`)
+
+```
+
+
+```{r}
+#encoding date columns
+df$`StayAtHome_fac` <- ifelse(as.character(df$`Stay at home/ shelter in place`)=="1899-12-30", 0,1)
+df$`EndStayAtHome_fac` <- ifelse(as.character(df$`End/relax stay at home/shelter in place`)=="1899-12-30",0,1)
+df$`ClosedNonEssBusiness_fac` <- ifelse(as.character(df$`Closed non-essential businesses`)=="1899-12-30",0,1)
+df$`ReopenBusiness_fac` <- ifelse(as.character(df$`Began to reopen businesses statewide`) == "1899-12-30", 0, 1)
+df$`MandateFaceMask_fac` <- ifelse(as.character(df$`Mandate face mask use by employees in public-facing businesses`)=="1899-12-30", 0, 1)
+
+```
+
+```{r}
+#percent columns to actual values
+
+df$at_riskpop <- round((df$`Percent at risk for serious illness due to COVID`*df$`Population 2018`)/100,0)
+df$poverty_pop <- round((df$`Percent at risk for serious illness due to COVID`*df$`Population 2018`)/100,0)
+df$at_riskpop_norm <- round((df$at_riskpop - min(df$at_riskpop))/(max(df$at_riskpop)-min(df$at_riskpop)),2)
+df$poverty_pop_norm <- round((df$poverty_pop - min(df$poverty_pop))/(max(df$poverty_pop)-min(df$poverty_pop)),2)
+
+```
+
+```{r}
+df$delay_facemask_mandate<- as_datetime(df$`Mandate face mask use by employees in public-facing businesses`) -  as_datetime(df$`State of emergency`)
+df$Stay_at_Home_duration<-df$`End/relax stay at home/shelter in place` -  df$`Stay at home/ shelter in place`
+df$BusinessClosed_duration <- df$`Began to reopen businesses statewide` -  df$`Closed non-essential businesses`
+
+
+df$delay_facemask_mandate[df$MandateFaceMask_fac==0] <- 52
+df$Stay_at_Home_duration[df$EndStayAtHome_fac==0 | df$StayAtHome_fac==0] <- 40
+df$BusinessClosed_duration[df$ClosedNonEssBusiness_fac==0 | df$ReopenBusiness_fac==0] <- 40
+
+
+#MandateDelay_mean = mean(df$delay_facemask_mandate%>%filter_by(df$MandateFaceMask_fac== 1))
+```
+
+```{r}
+#regression without 2 main covariates
+
+linearmod1 <- lm(case_norm ~ MandateFaceMask_fac + pop18_norm + delay_facemask_mandate, data = df)
+summary(linearmod1)
+```
+
+```{r}
+linearmodel2 <- lm(case_norm ~  MandateFaceMask_fac + pop18_norm + delay_facemask_mandate + BusinessClosed_duration + Stay_at_Home_duration , data = df)
+summary(linearmodel2 )
+
+```
+
+```{r}
+linearmodel3 <- lm(case_norm ~ MandateFaceMask_fac + BusinessClosed_duration+ pop18_norm+poverty_pop_norm, data =df)
+summary(linearmodel2 )
+
+#cases, death_100k, casesinlast7days, stayathome, closednoness, mandatefacemask, popdensity, poverty, highrisk, adults all
+
+#linearmod1 <- lm(death_norm ~ case_norm+Death_100k+CasesInLast7Days+`Stay at home/ shelter in place`+`End/relax stay at home/shelter in place`+`Closed non-essential businesses`+`Mandate face mask use by employees in public-facing businesses`+`Population density per square miles`+`Adults 35-54`+`Adults 55-64`+`65+`, data = df)
+#summary(linearmod1)
+```
+
+
+
+
