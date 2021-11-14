@@ -6,7 +6,7 @@ We assume the dates on which the mandate was placed is critical to our study for
 
 In our study, we conducted various tasks prior to our linear regression models:
 
-First, we studied the data and tried to understand the distribution of total number of cases by each state, which we used as dependent variable for our study. Our aim in understanding the distribution is to identify outliers as well as get a general idea about the dependent variable spread.
+1. First, we studied the data and tried to understand the distribution of total number of cases by each state, which we used as dependent variable for our study. Our aim in understanding the distribution is to identify outliers as well as get a general idea about the dependent variable spread.
 Then we cleaned our data and identified issues such as duplicates or missing value that can affect our study.
 We also performed exploratory data analysis (EDA) in order to form our base model and identified key variables to be used for our linear regression models.
 We identified required data transformation for effective study and required key variables created from 'Mandate face mask in public facing business' date
